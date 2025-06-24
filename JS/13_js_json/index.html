@@ -17,9 +17,10 @@
             </div>
             <div class="col-4">
                 <form id="form" class="rounded-3  m-3 p-3 shadow" >
+                    <input readonly type="number" id="id" />
                     <div class="mb-3">
                         <label for="formGroupExampleInput" class="form-label">name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter name">
+                        <input  type="text" class="form-control" id="name" placeholder="Enter name">
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">email</label>
@@ -30,7 +31,7 @@
                         <input type="number" class="form-control" id="phone" placeholder="Enter phone">
                     </div>
                     <div class="mb-3">
-                      <button class="btn btn-success">Submit</button>
+                      <button class="btn btn-success" id="submitbtn">Submit</button>
                     </div>
                 </form>
             </div>
@@ -43,6 +44,7 @@
                                <th>Name</th>
                                <th>Email</th>
                                <th>Phone</th>
+                               <th>BTNS</th>
                            </tr>
                        </thead>
                        <tbody id="tbody">

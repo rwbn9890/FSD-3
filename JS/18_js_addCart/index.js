@@ -251,24 +251,65 @@ let cart = []
 
 
 function addToCart(id){
+let isExits= cart.some((ele) => ele.id == id)
+  if(isExits){
+    window.alert("Item Already Exits in Cart 🛒")
+  }else{
     let obj = data.find((el) => el.id == id)
+    obj.qtn = 1;
     cart.push(obj)
-    console.log(cart)
-    cartLength.textContent = cart.length;
-
     showCart(cart)
+  }
+}
+
+function showTotal(cart){
     let sum = 0;
     cart.forEach((el)=>{
-        sum = sum + el.price
+        sum = sum + el.price*el.qtn;
     })
-
      total.textContent = sum
 }
 
 
+function removeCartItem(id){
+  cart = cart.filter((ele)=> ele.id != id)
+  showCart(cart);
+}
+
+function decCount(id){
+  cart = cart.map((ele) => {
+    if(ele.id == id){
+      ele.qtn = ele.qtn-1;
+    }
+    return ele;
+  })
+
+  cart = cart.filter((ele)=>{
+    if(ele.qtn >= 1){
+      return ele
+    }
+  })
+
+   showCart(cart);
+   console.log(cart)
+}
+
+function incCount(id){
+  cart = cart.map((ele) => {
+    if(ele.id == id){
+      ele.qtn = ele.qtn+1;
+    }
+    return ele;
+  })
+   showCart(cart);
+   console.log(cart)
+}
+
 
 function showCart(arr){
     cartRow.innerHTML = ""
+    cartLength.textContent = arr.length;
+    showTotal(arr)
     arr.map((ele)=>{
         cartRow.innerHTML += `
             <div class="col-12">
@@ -285,10 +326,13 @@ function showCart(arr){
                                         </div>
                                         <h5 class="card-title">${ele.title}</h5>
                                         <p class="card-text">${ele.category}</p>
-                                        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <button type="button" class="btn btn-danger btn-sm">-</button>
-                                        <button type="button" class="btn  btn-sm">0</button>
-                                        <button type="button" class="btn btn-success btn-sm">+</button>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                          <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                            <button onclick="decCount(${ele.id})"  type="button" class="btn btn-danger btn-sm">-</button>
+                                            <button type="button" class="btn  btn-sm">${ele.qtn}</button>
+                                            <button onclick="incCount(${ele.id})" type="button" class="btn btn-success btn-sm">+</button>
+                                          </div>
+                                          <button onclick="removeCartItem(${ele.id})" class="btn p-1 rounded-circle"><i class="bi bi-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -301,9 +345,7 @@ function showCart(arr){
 
 
 function showData(arr){
-
     arr.map((ele) => {
-
         row.innerHTML += `
                 <div class="col-lg-3">
                     <div class="card h-100 p-2">
@@ -313,9 +355,7 @@ function showData(arr){
                            <span class="badge text-bg-light">$ ${ele.price} /-</span>
                             <span class="badge text-bg-warning"> ${ele.rating.rate}</span>
                         </div>
-                
-                     
-                            <h5 class="card-title">${ele.title}</h5>
+                            <h6 class="card-title">${ele.title}</h6>
                             <p class="card-text">${ele.category}</p>
                             <button onclick="addToCart(${ele.id})" class="btn btn-success btn-sm">Add to Cart</button>
                         </div>

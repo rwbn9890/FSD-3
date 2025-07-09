@@ -3,7 +3,7 @@ let cartLength = document.querySelector("#cartLength")
 let cartRow = document.querySelector("#cartRow")
 let total = document.querySelector("#total")
 
-let cart = []
+let cart = JSON.parse(localStorage.getItem("cart"))  || []
  let data =[
   {
     "id": 1,
@@ -110,7 +110,7 @@ let cart = []
     "image": "https://fakestoreapi.com/img/61IBBVJvSDL._AC_SY879_.jpg",
     "rating": {
       "rate": 3.3,
-      "count": 203
+      "count": 11
     }
   },
   {
@@ -249,6 +249,15 @@ let cart = []
 
 
 
+function setLocal(cart){
+  localStorage.setItem("cart", JSON.stringify(cart))
+  getLocal()
+}
+
+function getLocal(){
+ let newcart = JSON.parse(localStorage.getItem("cart")) || [];
+  showCart(newcart)
+}
 
 function addToCart(id){
 let isExits= cart.some((ele) => ele.id == id)
@@ -258,7 +267,7 @@ let isExits= cart.some((ele) => ele.id == id)
     let obj = data.find((el) => el.id == id)
     obj.qtn = 1;
     cart.push(obj)
-    showCart(cart)
+    setLocal(cart)
   }
 }
 
@@ -270,10 +279,9 @@ function showTotal(cart){
      total.textContent = sum
 }
 
-
 function removeCartItem(id){
   cart = cart.filter((ele)=> ele.id != id)
-  showCart(cart);
+    setLocal(cart)
 }
 
 function decCount(id){
@@ -289,22 +297,25 @@ function decCount(id){
       return ele
     }
   })
-
-   showCart(cart);
-   console.log(cart)
+  setLocal(cart)
 }
 
 function incCount(id){
-  cart = cart.map((ele) => {
-    if(ele.id == id){
-      ele.qtn = ele.qtn+1;
-    }
-    return ele;
-  })
-   showCart(cart);
-   console.log(cart)
-}
 
+  let obj = cart.find((ele)=> ele.id == id)
+
+ if(obj.rating.count<=obj.qtn){
+    window.alert("out of Stock...!")
+ }else{
+   cart = cart.map((ele) => {
+     if(ele.id == id){
+       ele.qtn = ele.qtn+1;
+     }
+     return ele;
+   })
+   setLocal(cart)
+ }
+}
 
 function showCart(arr){
     cartRow.innerHTML = ""
@@ -343,6 +354,8 @@ function showCart(arr){
     })
 }
 
+showCart(cart)
+
 
 function showData(arr){
     arr.map((ele) => {
@@ -351,6 +364,7 @@ function showData(arr){
                     <div class="card h-100 p-2">
                         <img src=${ele.image} class="card-img-top img-thumbnail" style="height:200px" alt="...">
                         <div class="card-body">
+                        left <span class="badge border text-info"> ${ele.rating.count}</span>
                         <div class="d-flex justify-content-between">
                            <span class="badge text-bg-light">$ ${ele.price} /-</span>
                             <span class="badge text-bg-warning"> ${ele.rating.rate}</span>
